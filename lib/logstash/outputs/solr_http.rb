@@ -10,14 +10,14 @@ require "uuidtools"
 # started quickly you should use version 4.4 or above in schemaless mode,
 # which will try and guess your fields automatically. To turn that on,
 # you can use the example included in the Solr archive:
-#
+# [source,shell]
 #     tar zxf solr-4.4.0.tgz
 #     cd example
 #     mv solr solr_ #back up the existing sample conf
 #     cp -r example-schemaless/solr/ .  #put the schemaless conf in place
 #     java -jar start.jar   #start Solr
 #
-# You can learn more about Solr at <https://lucene.apache.org/solr/>
+# You can learn more at https://lucene.apache.org/solr/[the Solr home page]
 
 class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
   include Stud::Buffer
