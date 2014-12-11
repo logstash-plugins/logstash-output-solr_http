@@ -10,7 +10,7 @@ require "uuidtools"
 # started quickly you should use version 4.4 or above in schemaless mode,
 # which will try and guess your fields automatically. To turn that on,
 # you can use the example included in the Solr archive:
-#
+# [source,shell]
 #     tar zxf solr-4.4.0.tgz
 #     cd example
 #     mv solr solr_ #back up the existing sample conf
