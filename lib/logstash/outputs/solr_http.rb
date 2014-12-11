@@ -17,7 +17,7 @@ require "uuidtools"
 #     cp -r example-schemaless/solr/ .  #put the schemaless conf in place
 #     java -jar start.jar   #start Solr
 #
-# You can learn more about Solr at <https://lucene.apache.org/solr/>
+# You can learn more at https://lucene.apache.org/solr/[the Solr home page]
 
 class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
   include Stud::Buffer
@@ -32,8 +32,8 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
   # Number of events to queue up before writing to Solr
   config :flush_size, :validate => :number, :default => 100
 
-  # Make sure that documents are committed within this amount of milliseconds
-  config :commit_within, :validate => :number, :default => nil
+  # Instruct solr to commit within this amount of milliseconds
+  config :commit_within_milliseconds, :validate => :number, :default => nil
 
   # Amount of time since the last flush before a flush is done even if
   # the number of buffered events is smaller than flush_size
@@ -75,10 +75,10 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
         documents.push(document)
     end
 
-    if @commit_within.nil?
+    if @commit_within_milliseconds.nil?
       @solr.add documents
     else
-      @solr.add documents, :add_attributes => {:commitWithin => @commit_within}
+      @solr.add documents, :add_attributes => {:commitWithin => @commit_within_milliseconds}
     end
 
     rescue Exception => e
