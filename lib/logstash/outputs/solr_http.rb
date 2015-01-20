@@ -24,7 +24,6 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
 
   config_name "solr_http"
 
-  milestone 1
 
   # URL used to connect to Solr
   config :solr_url, :validate => :string, :default => "http://localhost:8983/solr"
