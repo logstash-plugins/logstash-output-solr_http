@@ -57,7 +57,7 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
   end #def receive
 
   public
-  def flush(events, teardown=false)
+  def flush(events, close=false)
     documents = []  #this is the array of hashes that we push to Solr as documents
 
     events.each do |event|
