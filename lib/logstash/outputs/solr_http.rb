@@ -52,7 +52,7 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
 
   public
   def receive(event)
-    
+
     buffer_receive(event)
   end #def receive
 
