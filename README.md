@@ -1,6 +1,6 @@
 # Logstash Plugin
 
-[![Travis Build Status](https://travis-ci.org/logstash-plugins/logstash-output-solr_http.svg)](https://travis-ci.org/logstash-plugins/logstash-output-solr_http)
+[![Travis Build Status](https://travis-ci.com/logstash-plugins/logstash-output-solr_http.svg)](https://travis-ci.com/logstash-plugins/logstash-output-solr_http)
 
 This is a plugin for [Logstash](https://github.com/elastic/logstash).
 
