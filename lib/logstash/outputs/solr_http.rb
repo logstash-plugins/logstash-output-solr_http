@@ -39,10 +39,12 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
   # '%{foo}' so you can assign your own IDs
   config :document_id, :validate => :string, :default => nil
 
+  # Solr field name of document ID field name.
+  config :document_id_field, :validate => :string, :default => "id"
+  
   public
   def register
     require "rsolr"
-    @solr = RSolr.connect :url => @solr_url
     buffer_initialize(
       :max_items => @flush_size,
       :max_interval => @idle_flush_time,
@@ -52,26 +54,37 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
 
   public
   def receive(event)
-
     buffer_receive(event)
   end #def receive
 
   public
   def flush(events, close=false)
-    documents = []  #this is the array of hashes that we push to Solr as documents
-
+    documents = Hash.new   #this is the map of hashes that we push to Solr as documents
     events.each do |event|
-        document = event.to_hash()
-        document["@timestamp"] = document["@timestamp"].iso8601 #make the timestamp ISO
+        url = event.sprintf(@solr_url)  # solr url sprintf
+
+        if documents[url].nil? 
+          documents[url]=[]  # create a new array to url
+          @logger.debug("new url created [#{url}]")
+        end        
+        document = event.to_hash()        
         if @document_id.nil?
-          document ["id"] = UUIDTools::UUID.random_create    #add a unique ID
+          document [@document_id_field] = UUIDTools::UUID.random_create    #add a unique ID
         else
-          document ["id"] = event.sprintf(@document_id)      #or use the one provided
+          document [@document_id_field] = event.sprintf(@document_id)      #or use the one provided
         end
-        documents.push(document)
+        documents[url].push(document)
+    end
+    @logger.debug("#{documents.keys.length()} url detected")
+    documents.keys.each do |url|
+      solr = RSolr.connect :url => url
+      @logger.debug("solr connected [#{url}]")
+      @logger.debug("#{documents[url].length()} documents indexing...")
+      solr.add(documents[url])
+      @logger.debug("#{documents[url].length()} documents indexed.")
+      solr.commit :commit_attributes => {}
     end
 
-    @solr.add(documents)
     rescue Exception => e
       @logger.warn("An error occurred while indexing: #{e.message}")
   end #def flush
