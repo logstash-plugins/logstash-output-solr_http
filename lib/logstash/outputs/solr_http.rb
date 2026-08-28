@@ -75,4 +75,10 @@ class LogStash::Outputs::SolrHTTP < LogStash::Outputs::Base
     rescue Exception => e
       @logger.warn("An error occurred while indexing: #{e.message}")
   end #def flush
+
+  public
+  def teardown
+    buffer_flush(:final => true)
+    finished
+  end
 end #class LogStash::Outputs::SolrHTTP
